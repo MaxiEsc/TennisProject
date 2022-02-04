@@ -1,0 +1,42 @@
+Consultas:
+
+Todos los productos del rubro "libreria", creados hoy.
+
+SELECT * from producto left join rubro on producto.id_rubro = rubro.id_rubro
+where (producto.id_rubro = (select rubro.id_rubro from nueva_tabla_consulta.rubro where rubro = "libreria"))
+group by producto.id_rubro
+having producto.fecha_creacion = CURRENT_DATE
+
+
+Monto total vendido por cliente (mostrar nombre del cliente y monto).
+
+DATO -> la tabla clientes no tiene nombres por eso coloque la razon social
+
+select venta.cantidad, cliente.razon_social from venta left join cliente
+on venta.id_cliente = cliente.id_cliente 
+
+Cantidad de ventas por producto.
+ 
+SELECT venta.cantidad, producto.nombre from venta right join producto
+on venta.codigo_producto = producto.codigo
+group by (id_cliente)
+
+Cantidad de productos comprados por cliente en el mes actual.
+
+select venta.cantidad, venta.fecha, cliente.razon_social from venta left join cliente
+on venta.id_cliente = cliente.id_cliente 
+where venta.fecha >= '2022-02-01'
+
+Ventas que tienen al menos un producto del rubro "bazar"
+
+SELECT * from producto left join rubro on producto.id_rubro = rubro.id_rubro
+left join venta on venta.codigo_producto = producto.codigo
+where (producto.id_rubro = (select rubro.id_rubro from nueva_tabla_consulta.rubro where rubro = "bazar"))
+group by producto.id_rubro
+having venta.cantidad >= 1
+
+Rubros que no tienen ventas en los ultimos 2 meses.
+
+select venta.cantidad, venta.fecha, producto.nombre, venta.codigo_producto from venta left join producto
+on venta.codigo_producto = producto.codigo
+where venta.fecha <= '2021-12-31'
